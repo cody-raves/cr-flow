@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  pointer-events: auto;   /* <-- FIXES SOUND + INPUT */
+}
+
+
+
+.wrapper {
+  text-align: center;
+  pointer-events: auto !important;   /* <-- THIS is why you can't interact */
+}
+
+
+h2 {
+  margin: 0 0 4px;
+  color: #7fff7f;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+#board {
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 0 22px rgba(0, 0, 0, 0.95);
+  display: block;
+}
+
+.status {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.92;
+}
+
+.controls {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.controls button {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: none;
+  background: #444;
+  color: #eee;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background: #666;
+}
+
+#levelLabel {
+  min-width: 90px;
+}
+
+canvas {
+  position: relative;
+}
+
+.checkmark {
+  font-size: 18px;
+  color: white;
+  pointer-events: none;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
