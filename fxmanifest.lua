@@ -6,10 +6,7 @@ ui_page 'html/index.html'
 files {
     'html/index.html',
     'html/style.css',
-
-    -- TIMER SYSTEM
     'html/timer.js',
-
     'html/events.js',
     'html/input.js',
     'html/config.js',
@@ -31,3 +28,5 @@ client_scripts {
 server_scripts {
     'server.lua'
 }
+
+
