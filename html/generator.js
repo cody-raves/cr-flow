@@ -2,22 +2,36 @@
 // RANDOM PUZZLE GENERATION
 // ===============================
 
-// Small helper: safe debug logger
+// Small helper: debug logger (respects Config.debug)
 function debugLog(label, info) {
     try {
-        console.log(`[cr-flow] ${label}`, info || {});
-        fetch(`https://${GetParentResourceName()}/debug`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                message: label,
-                info: info || {}
-            })
-        });
+        // If Config.debug is false or missing, do nothing
+        if (typeof Config === "undefined" || !Config.debug) return;
+
+        // NUI console
+        if (typeof console !== "undefined" && console.log) {
+            console.log(`[cr-flow] ${label}`, info || {});
+        }
+
+        // Forward to Lua console
+        if (typeof GetParentResourceName === "function") {
+            fetch(`https://${GetParentResourceName()}/debug`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: label,
+                    info: info || {}
+                })
+            }).catch(() => {});
+        }
     } catch (e) {
-        console.log("[cr-flow debugLog error]", e);
+        // last-resort log, but only if console exists
+        if (typeof console !== "undefined" && console.log) {
+            console.log("[cr-flow debugLog error]", e);
+        }
     }
 }
+
 
 // -------------------------------
 // 1) DFS HAMILTONIAN (for 5–7)
