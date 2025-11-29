@@ -1,49 +1,42 @@
+<h1 align="center">cr-flow</h1>
 
-# CR Flow – Skill-Based Flow Puzzle Minigame (5x5–9x9, Guaranteed Solvable)
-https://streamable.com/mtgvjq for a video example 
+<div align="center">
+  <img height="197" src="https://i.ibb.co/XZBXZVBw/flow.gif" />
+</div>
 
-The core idea:
+<p align="center">
+  Skill-Based Puzzle Minigame with randomly generated puzzles.<br>
+  Supports 5x5, 6x6, 7x7, 8x8, 9x9 sized grids.
+</p>
 
->  Every puzzle is **randomly generated AND guaranteed solvable**  
->  Success is **100% skill-based** – no fake RNG fail after a perfect run
-
-If the player solves the board in time, they succeed.  
-If they don’t, they fail. There’s no hidden dice roll inside the minigame.
-
----
-
-##  What it is
-
-- Flow-style puzzle: connect matching colored dots without crossing paths
-- Boards are generated from a **Hamiltonian path** so they’re *always* solvable
-- Supports **5x5, 6x6, 7x7, 8x8, 9x9** grids
-- Time limit per puzzle (seconds) to scale difficulty
-- Perfect to plug into:
-  - Lockpicking
-  - Safes / vaults / laptops
-  - Heists / job hacks
-  - Any “skill check” you want that isn’t just spam-E or QTE
+<p align="center">
+  Perfect to plug into:<br>
+  • Lockpicking<br>
+  • Safes / vaults / laptops<br>
+  • Heists / job hacks<br>
+  • Any “skill check” you want that isn’t just spam-E or QTE
+</p>
 
 ---
 
-##  Key Features
+<p align="center"><b>Exports</b></p>
 
--  **Random but solvable**  
-  Every board is generated fresh and guaranteed to have a solution.
+```lua
+-- 1) Set only the puzzle timer (in seconds)
+--    Next time the UI opens, it will use this time limit.
+exports['cr-flow']:SetFlowTimer(15)
 
--  **Pure skill, no RNG outcome**  
-  The export returns `true/false` based only on whether the player actually solved it in time.
+-- 2) Set only the puzzle grid size
+--    5–9 → 5x5 up to 9x9 (values outside this range are clamped).
+exports['cr-flow']:SetFlowGridSize(7)
 
--  **Scalable difficulty**
-  - `gridSize` from **5–9** (5x5 → 9x9)
-  - `timeLimit` in seconds
-  - Make better tools easier (reward) or harder (challenge) – your call.
+-- 3) Run a one-shot Flow puzzle and get a boolean result
+--    First argument  = grid size  (5–9)
+--    Second argument = time limit (seconds)
+local success = exports['cr-flow']:PlayFlowPuzzle(7, 18)
 
--  **Clean NUI**
-  - Canvas-based board
-  - Animated timer border that fills as time runs out
-
--  **Sound hooks**
-  - Pair connect
-  - Fail / overwrite
-  - Puzzle complete
+if success then
+    -- player solved the puzzle in time
+else
+    -- player failed, ran out of time, or closed it
+end
