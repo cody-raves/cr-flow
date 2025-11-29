@@ -127,7 +127,7 @@ end)
 -- ============================
 
 RegisterNUICallback("fail", function(_, cb)
-    print("FLOW FAILED (timer ran out)")
+    print("PUZZLE FAILED")
 
     -- 🔊 play the fail sound for timeout
     exports['cr-flow']:FailSound()
@@ -222,7 +222,6 @@ end)
 exports('PlayFlowPuzzle', function(gridSize, seconds)
     -- Prevent double-opening if something is already running
     if currentPuzzlePromise then
-        print("[cr-flow] PlayFlowPuzzle called while another puzzle is active")
         return false
     end
 
@@ -252,4 +251,5 @@ exports('PlayFlowPuzzle', function(gridSize, seconds)
     -- and clear currentPuzzlePromise
     return result and true or false
 end)
+
 
