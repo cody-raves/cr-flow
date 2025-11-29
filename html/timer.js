@@ -2,8 +2,6 @@
 // TIMER SYSTEM
 // ===============================
 
-console.log("timer.js loaded");
-
 // Is the timer currently ticking?
 let timerActive = false;
 
@@ -56,12 +54,10 @@ function startTimer(seconds) {
     puzzleSolved = false;
 
     updateBorderProgress(0);
-    console.log("Timer started for", seconds, "seconds");
 }
 
 function stopTimer() {
     if (timerActive) {
-        console.log("Timer stopped");
     }
     timerActive = false;
 }
@@ -79,12 +75,10 @@ function markPuzzleSolved() {
 function timerFail() {
     // If puzzle is already solved, ignore any late timer
     if (puzzleSolved) {
-        console.log("Timer reached 0 but puzzle already solved, ignoring.");
         return;
     }
 
     timerActive = false;
-    console.log("Timer expired → triggering FAIL");
 
     // 🔊 play fail sound (native)
     fetch(`https://${GetParentResourceName()}/fail`, {
@@ -123,3 +117,4 @@ function updateTimerFrame() {
 
     updateBorderProgress(progress);
 }
+
