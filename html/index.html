@@ -36,22 +36,11 @@
 <script src="puzzle.js"></script>
 <script src="main.js"></script>
 
-
-
 <!-- =============================== -->
-<!--     OPEN / CLOSE HANDLING       -->
+<!--     ESC KEY HANDLING            -->
 <!-- =============================== -->
 
 <script>
-  window.addEventListener("message", (event) => {
-      if (event.data.action === "open") {
-          document.getElementById("app").style.display = "block";
-      }
-      if (event.data.action === "close") {
-          document.getElementById("app").style.display = "none";
-      }
-  });
-
   document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
           fetch(`https://${GetParentResourceName()}/close`, {
