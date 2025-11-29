@@ -3,25 +3,32 @@
 // ===============================
 
 function boot() {
-    // Reset sounds (rising tone chain)
-    if (typeof resetSound === "function") resetSound();
+    // Reset sounds (if any)
+    if (typeof resetSound === "function") {
+        resetSound();
+    }
 
     // Reset timer values
-    if (typeof stopTimer === "function") stopTimer();
-    if (typeof updateBorderProgress === "function") updateBorderProgress(0);
+    if (typeof stopTimer === "function") {
+        stopTimer();
+    }
+    if (typeof updateBorderProgress === "function") {
+        updateBorderProgress(0);
+    }
 
-    // Create a fresh new puzzle
-    loadRandomLevel();
+    // IMPORTANT:
+    // Do NOT call loadRandomLevel() here.
+    // Puzzles are created fresh in events.js when we receive { action: "open" }.
 
-    // Ensure the animation + timer loops are running
-    if (!window._flowAnimationStarted) {
+    // Make sure animation loop is running (render.js already starts it,
+    // but this guard keeps things safe if you ever change that).
+    if (!window._flowAnimationStarted && typeof animationLoop === "function") {
         window._flowAnimationStarted = true;
         requestAnimationFrame(animationLoop);
     }
-    if (!window._flowTimerStarted && typeof timerLoop === "function") {
-        window._flowTimerStarted = true;
-        requestAnimationFrame(timerLoop);
-    }
+
+    // Timer loop is driven by timer.js / render.js (updateTimerFrame),
+    // so we don't need a separate timerLoop here.
 }
 
 boot();
