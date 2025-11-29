@@ -1,17 +1,83 @@
 local showing = false
+local currentPuzzlePromise = nil  -- for one-shot minigame export
 
 -- ============================
--- OPEN UI (with default timer)
+-- HELPER: OPEN FLOW PUZZLE
 -- ============================
 
-RegisterCommand("flow", function()
-    -- 🕒 Optional: default time limit for this puzzle (e.g. 30 seconds)
-    -- Server owners can override with exports['cr-flow']:SetFlowTimer(x) elsewhere.
-    exports['cr-flow']:SetFlowTimer(15)
+local function OpenFlow(gridSize, seconds)
+    if gridSize then
+        SendNUIMessage({
+            action = "setGridSize",
+            size = tonumber(gridSize)
+        })
+    end
+
+    if seconds then
+        SendNUIMessage({
+            action = "setTimer",
+            time = tonumber(seconds)
+        })
+    end
 
     SetNuiFocus(true, true)
     SendNUIMessage({ action = "open" })
     showing = true
+end
+
+-- ============================
+-- COMMANDS (DEV / TESTING)
+-- ============================
+
+-- /flow              -> 6x6, 15s
+-- /flow 7            -> 7x7, 15s
+-- /flow 9 25         -> 9x9, 25s
+RegisterCommand("flow", function(_, args)
+    local grid = tonumber(args[1]) or 6
+    local time = tonumber(args[2]) or 15
+    OpenFlow(grid, time)
+end)
+
+-- Quick shortcuts if you want to spam different sizes:
+RegisterCommand("flow5", function()
+    OpenFlow(5, 8)   -- 5x5, 8s
+end)
+
+RegisterCommand("flow6", function()
+    OpenFlow(6, 10)  -- 6x6, 10s
+end)
+
+RegisterCommand("flow7", function()
+    OpenFlow(7, 15)  -- 7x7, 15s
+end)
+
+RegisterCommand("flow8", function()
+    OpenFlow(8, 20)  -- 8x8, 20s
+end)
+
+RegisterCommand("flow9", function()
+    OpenFlow(9, 25)  -- 9x9, 25s
+end)
+
+-- ============================
+-- DEBUG FROM NUI
+-- ============================
+
+RegisterNUICallback("debug", function(data, cb)
+    local msg = "[cr-flow DEBUG] "
+    if data and data.message then
+        msg = msg .. tostring(data.message)
+    else
+        msg = msg .. "(no message)"
+    end
+
+    if data and data.info then
+        -- crude print of extra info; avoid json.encode to keep it simple
+        msg = msg .. " | info=" .. tostring(data.info)
+    end
+
+    print(msg)
+    cb("ok")
 end)
 
 -- ============================
@@ -22,6 +88,13 @@ RegisterNUICallback("close", function(_, cb)
     SetNuiFocus(false, false)
     SendNUIMessage({ action = "close" })
     showing = false
+
+    -- If someone is awaiting the puzzle, treat a manual close as failure
+    if currentPuzzlePromise then
+        currentPuzzlePromise:resolve(false)
+        currentPuzzlePromise = nil
+    end
+
     cb("ok")
 end)
 
@@ -38,6 +111,13 @@ RegisterNUICallback("success", function(_, cb)
 
     -- notify server that player completed successfully
     TriggerServerEvent("flow:puzzleCompleted")
+
+    -- resolve active promise (if any) as success
+    if currentPuzzlePromise then
+        currentPuzzlePromise:resolve(true)
+        currentPuzzlePromise = nil
+    end
+
     cb("ok")
 end)
 
@@ -59,6 +139,12 @@ RegisterNUICallback("fail", function(_, cb)
 
     -- tell server you failed (if you want to hook this)
     TriggerServerEvent("flow:puzzleFailed")
+
+    -- resolve active promise (if any) as failure
+    if currentPuzzlePromise then
+        currentPuzzlePromise:resolve(false)
+        currentPuzzlePromise = nil
+    end
 
     cb("ok")
 end)
@@ -114,3 +200,56 @@ exports('SetFlowTimer', function(seconds)
         time = tonumber(seconds)
     })
 end)
+
+-- ============================
+-- EXPORT: Set puzzle grid size
+-- Called from any other client script:
+--   exports['cr-flow']:SetFlowGridSize(7)
+-- ============================
+
+exports('SetFlowGridSize', function(size)
+    SendNUIMessage({
+        action = "setGridSize",
+        size = tonumber(size)
+    })
+end)
+
+-- ============================
+-- EXPORT: One-shot minigame (returns true/false)
+--   local ok = exports['cr-flow']:PlayFlowPuzzle(7, 18)
+-- ============================
+
+exports('PlayFlowPuzzle', function(gridSize, seconds)
+    -- Prevent double-opening if something is already running
+    if currentPuzzlePromise then
+        print("[cr-flow] PlayFlowPuzzle called while another puzzle is active")
+        return false
+    end
+
+    local p = promise.new()
+    currentPuzzlePromise = p
+
+    if gridSize then
+        SendNUIMessage({
+            action = "setGridSize",
+            size = tonumber(gridSize)
+        })
+    end
+
+    if seconds then
+        SendNUIMessage({
+            action = "setTimer",
+            time = tonumber(seconds)
+        })
+    end
+
+    SetNuiFocus(true, true)
+    SendNUIMessage({ action = "open" })
+    showing = true
+
+    local result = Citizen.Await(p)
+    -- `success`/`fail`/`close` callbacks will resolve the promise
+    -- and clear currentPuzzlePromise
+    return result and true or false
+end)
+
