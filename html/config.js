@@ -31,13 +31,13 @@ const Config = {
 
 // Color mapping for each pipe id (string keys)
 const colorMap = {
-    "1": "#2e86de", // blue
-    "2": "#f39c12", // orange
-    "3": "#e74c3c", // red
-    "4": "#219641", // green
-    "5": "#9b59b6", // purple
-    "6": "#1abc9c", // teal
-    "7": "#e84393", // pink
-    "8": "#00cec9", // cyan
-    "9": "#6c5ce7"  // violet
+    "1": "#2F9BFF", // bright blue
+    "2": "#FFD93B", // warm yellow
+    "3": "#FF9E2C", // orange
+    "4": "#FF4B4B", // red
+    "5": "#2ECC71", // green
+    "6": "#5DF2FF", // light cyan
+    "7": "#FF5EDB", // pink / magenta
+    "8": "#B57CFF", // purple
+    "9": "#C65B4B"  // maroon / brown
 };
