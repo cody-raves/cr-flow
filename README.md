@@ -11,7 +11,7 @@
 
 <p align="center">
   • 100% Skill Based<br>
-  • Randonly Generated Puzzles<br>
+  • Random Generatation of Puzzles<br>
   • Scalable difficulty via timer and grid size<br>
   • Can be used for lockpicking, robberies, heists and more
 </p>
