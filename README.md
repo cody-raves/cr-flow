@@ -10,11 +10,10 @@
 </p>
 
 <p align="center">
-  Perfect to plug into:<br>
-  • Lockpicking<br>
-  • Safes / vaults / laptops<br>
-  • Heists / job hacks<br>
-  • Any “skill check” you want that isn’t just spam-E or QTE
+  • 100% Skill Based<br>
+  • Randonly Generated Puzzles<br>
+  • Scalable difficulty via timer and grid size<br>
+  • Can be used for lockpicking, robberies, heists and more
 </p>
 
 ---
