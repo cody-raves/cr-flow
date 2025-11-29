@@ -14,31 +14,17 @@
   </div>
 </div>
 
-<!-- =============================== -->
-<!--   JS LOAD ORDER (ACTUAL ORDER)  -->
-<!-- =============================== -->
-
 <script src="config.js"></script>
 <script src="state.js"></script>
 <script src="helpers.js"></script>
 <script src="generator.js"></script>
-
-<!-- TIMER MUST LOAD FIRST -->
 <script src="timer.js"></script>
-<script> console.log("index → timer.js loaded?", typeof updateTimerFrame); </script>
-
 <script src="render.js"></script>
-<script> console.log("index → render.js loaded", typeof updateTimerFrame); </script>
-
 <script src="events.js"></script>
 <script src="input.js"></script>
 <script src="logic.js"></script>
 <script src="puzzle.js"></script>
 <script src="main.js"></script>
-
-<!-- =============================== -->
-<!--     ESC KEY HANDLING            -->
-<!-- =============================== -->
 
 <script>
   document.addEventListener("keydown", (e) => {
